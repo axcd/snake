@@ -1,10 +1,17 @@
 #include <stdio.h>
+#include <time.h>
 
-int logger( const char* info,int code,void* pin )
+char *logfile = "/storage/emulated/0/clog.txt";
+
+int mlog( const char* info,int code,void* pin )
 {
+    time_t nowtime=time(NULL); 
+    char tmp[64];
+    strftime(tmp,sizeof(tmp),"%Y-%m-%d %H:%M:%S",localtime(&nowtime));
+
    FILE * fp;
-   fp = fopen ( "log.txt", "a+" );
-   fprintf( fp, "[ %p ]   %d  %s\n", pin, code, info );
+   fp = fopen ( logfile, "a+" );
+   fprintf( fp, "%s  [ %p ]   %d  %s\n", tmp, pin, code, info );
    fclose( fp ); 
    return 0;
 }
@@ -12,7 +19,7 @@ int logger( const char* info,int code,void* pin )
 void clean_log()
  {
     FILE *fp;
-    fp = fopen ( "log.txt", "w" );
+    fp = fopen ( logfile, "w" );
     fclose( fp );
     return ;
  }
